@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "853765867924",
+    "firebase_url": "https://call-me-59832.firebaseio.com",
+    "project_id": "call-me-59832",
+    "storage_bucket": "call-me-59832.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853765867924:android:9c8d642061644e37eda781",
+        "android_client_info": {
+          "package_name": "com.enike.callme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853765867924-4oo9h7uodi6jppooee4smgsi829559jv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBaW1zfx83nZskNUyaG56bhbtEUwfakQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853765867924-4oo9h7uodi6jppooee4smgsi829559jv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

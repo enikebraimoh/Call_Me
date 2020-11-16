@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent"
+    tools:context=".Registration2">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:text="Please Enter The Code\n Sent to You"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:fontFamily="@font/commissioner"
+        android:textColor="@color/black" />
+
+    <com.chaos.view.PinView
+        android:id="@+id/otpview"
+        style="@style/PinWidget.PinView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/commissioner"
+        android:layout_marginTop="50dp"
+        android:cursorVisible="true"
+        android:inputType="number"
+        android:elevation="10dp"
+        android:itemBackground="@color/white"
+        app:cursorColor="#000000"
+        app:hideLineWhenFilled="true"
+        app:itemCount="6"
+        app:itemHeight="50dp"
+        app:itemRadius="5dp"
+        app:itemWidth="50dp"
+        app:lineColor="#000000"
+        app:lineWidth="1dp" />
+
+    <Button
+        android:id="@+id/buttonsend"
+        android:layout_width="match_parent"
+        android:layout_marginTop="70dp"
+        android:clickable="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:background="@drawable/button"
+        android:text="CONFIRM"
+        android:fontFamily="@font/commissioner"
+        android:textSize="15sp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>
