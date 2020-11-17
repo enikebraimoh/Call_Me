@@ -1,9 +1,13 @@
 package com.enike.callme;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,29 +39,35 @@ public class MainActivity extends AppCompatActivity {
 
         navView.setOnNavigationItemSelectedListener(bottonnavlistener);
 
+        FindPeoplePage.setOnClickListener(view -> {
+
+            Intent findfriends = new Intent(MainActivity.this, FindFriends.class);
+            startActivity(findfriends);
+
+        });
+
+
     }
 
-  BottomNavigationView.OnNavigationItemSelectedListener bottonnavlistener =
-          new BottomNavigationView.OnNavigationItemSelectedListener() {
-      @Override
-      public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-          switch (item.getItemId()){
-              case R.id.navigation_home:
-//                  Intent home = new Intent(MainActivity.this, MainActivity.class);
-//                  startActivity(home);
-                  break;
-              case R.id.navigation_settings:
-                  Intent settings = new Intent(MainActivity.this, Settings.class);
-                  startActivity(settings);
-                  break;
-              case R.id.navigation_notifications:
-                  Intent notification = new Intent(MainActivity.this, Notifications.class);
-                  startActivity(notification);
-                  break;
-          }
 
-          return true;
-      }
-  };
+  BottomNavigationView.OnNavigationItemSelectedListener bottonnavlistener =
+          item -> {
+              switch (item.getItemId()){
+                  case R.id.navigation_home:
+    //                  Intent home = new Intent(MainActivity.this, MainActivity.class);
+    //                  startActivity(home);
+                      break;
+                  case R.id.navigation_settings:
+                      Intent settings = new Intent(MainActivity.this, Settings.class);
+                      startActivity(settings);
+                      break;
+                  case R.id.navigation_notifications:
+                      Intent notification = new Intent(MainActivity.this, Notifications.class);
+                      startActivity(notification);
+                      break;
+              }
+
+              return true;
+          };
 
 }
