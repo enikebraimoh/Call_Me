@@ -19,9 +19,17 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 public class Settings extends AppCompatActivity {
 
@@ -32,11 +40,13 @@ public class Settings extends AppCompatActivity {
     private Uri ImageUri;
     StorageReference userprofileref;
     private String DownloadUrl;
+    DatabaseReference Usersref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
 
         Name = findViewById(R.id.name);
         Bio = findViewById(R.id.bio);
@@ -44,6 +54,7 @@ public class Settings extends AppCompatActivity {
         ProfilePix = findViewById(R.id.profileimage);
 
         userprofileref = FirebaseStorage.getInstance().getReference().child("User Profile Images");
+        Usersref = FirebaseDatabase.getInstance().getReference().child("Users");
 
         ProfilePix.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,46 +73,85 @@ public class Settings extends AppCompatActivity {
                 Toast.makeText(this, "please all fields are mandatory", Toast.LENGTH_SHORT).show();
             }
             else{
+
                 SaveUserInfo();
 
             }
 
         });
+        RetreveUserInfo();
 
     }
 
     private void SaveUserInfo() {
         StorageReference filepath = userprofileref.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             UploadTask uploadTask = filepath.putFile(ImageUri);
-            uploadTask.continueWith(new Continuation<UploadTask.TaskSnapshot, Object>() {
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public Object then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if(!task.isSuccessful()){
-
                       throw  task.getException();
                     }
+
                     DownloadUrl = filepath.getDownloadUrl().toString();
                     return filepath.getDownloadUrl();
-                } 
-            }).addOnCompleteListener(new OnCompleteListener<Object>() {
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
-                public void onComplete(@NonNull Task<Object> task) {
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        DownloadUrl = task.getResult().toString();
 
+                        HashMap<String,Object> Profile = new HashMap<>();
+                        Profile.put("Name",Name.getText().toString());
+                        Profile.put("bio",Bio.getText().toString());
+                        Profile.put("profile pic Url",DownloadUrl);
 
+                        DatabaseReference usersref = Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        usersref.updateChildren(Profile).addOnCompleteListener(task1 -> {
+                            Intent intent = new Intent(Settings.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                            Toast.makeText(Settings.this, "Uploaded suscessfully", Toast.LENGTH_SHORT).show();
 
-
+                        });
+                    }
                 }
             });
 
+    }
+
+    private void RetreveUserInfo(){
+
+        Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    Name.setText(snapshot.child("Name").getValue().toString());
+                    Bio.setText(snapshot.child("bio").getValue().toString());
+                    Picasso.get().load(snapshot.child("profile pic Url").getValue().toString()).placeholder(R.drawable.ic_image).into(ProfilePix);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Galleryrequestcode && requestCode == RESULT_OK && data != null){
+        if(requestCode == Galleryrequestcode && resultCode == RESULT_OK && data != null){
             ImageUri = data.getData();
             ProfilePix.setImageURI(ImageUri);
+        }
+        else{
+            Toast.makeText(this, "image selection failed", Toast.LENGTH_SHORT).show();
         }
     }
 }

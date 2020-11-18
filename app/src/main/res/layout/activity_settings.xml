@@ -45,6 +45,7 @@
        android:layout_height="wrap_content">
 
        <ImageView
+           android:scaleType="fitCenter"
            android:id="@+id/profileimage"
            android:layout_width="220dp"
            android:src="@drawable/ic_image"
