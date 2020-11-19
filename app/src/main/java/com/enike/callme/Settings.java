@@ -35,7 +35,7 @@ import java.util.HashMap;
 public class Settings extends AppCompatActivity {
 
     EditText Name, Bio;
-    Button SaveBtn;
+    Button SaveBtn, Logout;
     ImageView ProfilePix;
     private static int Galleryrequestcode = 1;
     private Uri ImageUri;
@@ -52,10 +52,21 @@ public class Settings extends AppCompatActivity {
         Name = findViewById(R.id.name);
         Bio = findViewById(R.id.bio);
         SaveBtn = findViewById(R.id.savebutton);
+        Logout = findViewById(R.id.logoutbtn);
         ProfilePix = findViewById(R.id.profileimage);
 
         userprofileref = FirebaseStorage.getInstance().getReference().child("User Profile Images");
         Usersref = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(Settings.this,Registration1.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         ProfilePix.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,11 +84,12 @@ public class Settings extends AppCompatActivity {
             if(Name.getText().toString().equals("") || Bio.getText().toString().equals("")){
                 Toast.makeText(this, "please all fields are mandatory", Toast.LENGTH_SHORT).show();
             }else if(ImageUri == null){
+
                 Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                         .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                       if(snapshot.hasChild("profile pic Url")){
+                       if(snapshot.hasChild("Picture")){
                            HashMap<String,Object> Profile = new HashMap<>();
                            Profile.put("Name",Name.getText().toString());
                            Profile.put("bio",Bio.getText().toString());
@@ -138,7 +150,7 @@ public class Settings extends AppCompatActivity {
                         HashMap<String,Object> Profile = new HashMap<>();
                         Profile.put("Name",Name.getText().toString());
                         Profile.put("bio",Bio.getText().toString());
-                        Profile.put("profile pic Url",DownloadUrl);
+                        Profile.put("Picture",DownloadUrl);
 
                         DatabaseReference usersref = Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                         usersref.updateChildren(Profile).addOnCompleteListener(task1 -> {
@@ -163,7 +175,7 @@ public class Settings extends AppCompatActivity {
                 if(snapshot.exists()){
                     Name.setText(snapshot.child("Name").getValue().toString());
                     Bio.setText(snapshot.child("bio").getValue().toString());
-                    Picasso.get().load(snapshot.child("profile pic Url").getValue().toString()).placeholder(R.drawable.ic_image).into(ProfilePix);
+                    Picasso.get().load(snapshot.child("Picture").getValue().toString()).placeholder(R.drawable.ic_image).into(ProfilePix);
                 }
 
             }

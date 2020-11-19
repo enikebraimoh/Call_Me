@@ -45,7 +45,7 @@
        android:layout_height="wrap_content">
 
        <ImageView
-           android:scaleType="fitCenter"
+           android:scaleType="centerCrop"
            android:id="@+id/profileimage"
            android:layout_width="220dp"
            android:src="@drawable/ic_image"
@@ -132,6 +132,22 @@
         android:foreground="?attr/selectableItemBackground"
         android:background="@drawable/button"
         android:text="SAVE"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/commissioner"
+        android:textSize="15sp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/logoutbtn"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:background="#EC0505"
+        android:text="Logout"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/commissioner"
