@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
@@ -69,8 +70,40 @@ public class Settings extends AppCompatActivity {
         });
 
         SaveBtn.setOnClickListener(view -> {
-            if(Name.getText().toString().equals("") || Bio.getText().toString().equals("") || ImageUri == null){
+            if(Name.getText().toString().equals("") || Bio.getText().toString().equals("")){
                 Toast.makeText(this, "please all fields are mandatory", Toast.LENGTH_SHORT).show();
+            }else if(ImageUri == null){
+                Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       if(snapshot.hasChild("profile pic Url")){
+                           HashMap<String,Object> Profile = new HashMap<>();
+                           Profile.put("Name",Name.getText().toString());
+                           Profile.put("bio",Bio.getText().toString());
+
+                           DatabaseReference usersref = Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                           usersref.updateChildren(Profile).addOnCompleteListener(task1 -> {
+                               Intent intent = new Intent(Settings.this,MainActivity.class);
+                               startActivity(intent);
+                               finish();
+                               Toast.makeText(Settings.this, "Updated suscessfully", Toast.LENGTH_SHORT).show();
+                           });
+
+
+
+                       }
+                       else{
+                            Toast.makeText(Settings.this,"please select a picture",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
             else{
 

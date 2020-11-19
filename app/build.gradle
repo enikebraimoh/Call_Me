@@ -40,6 +40,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.5.1'
     implementation 'com.google.firebase:firebase-storage:19.2.0'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
+    implementation 'com.firebaseui:firebase-ui-database:0.4.0'
+
 
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.2.2'
