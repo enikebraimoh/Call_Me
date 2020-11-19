@@ -29,9 +29,9 @@ public class ProfileAcivity extends AppCompatActivity {
         CanclefriendRequest = findViewById(R.id.canclefriendrequest);
         Recievername = findViewById(R.id.recievername);
 
-        RecieverName = getIntent().getExtras().get("userId").toString();
-        RecieverId = getIntent().getExtras().get("userProfileImage").toString();
-        RecieverImage = getIntent().getExtras().get("UserName").toString();
+        RecieverId = getIntent().getExtras().get("userId").toString();
+        RecieverImage = getIntent().getExtras().get("userProfileImage").toString();
+        RecieverName = getIntent().getExtras().get("UserName").toString();
 
 
         Recievername.setText(RecieverName);

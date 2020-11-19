@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -96,11 +97,11 @@ public class FindFriends extends AppCompatActivity {
                     public void onClick(View view) {
                         String userid = getRef(i).getKey();
 
-                        Intent intent = new Intent(FindFriends.this,ProfileAcivity.class);
-                        intent.putExtra("userId",userid);
-                        intent.putExtra("userProfileImage",contactsmodel.getPicture());
-                        intent.putExtra("UserName",contactsmodel.getName());
-                        startActivity(intent);
+                        Intent newintent = new Intent(FindFriends.this,ProfileAcivity.class);
+                        newintent.putExtra("userId",userid);
+                        newintent.putExtra("userProfileImage",contactsmodel.getPicture());
+                        newintent.putExtra("UserName",contactsmodel.getName());
+                        startActivity(newintent);
 
                     }
                 });
