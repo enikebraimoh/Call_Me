@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,7 +41,6 @@ public class Notifications extends AppCompatActivity {
         Users = FirebaseDatabase.getInstance().getReference().child("Contacts");
         currentUser = mAuth.getCurrentUser().getUid();
 
-
     }
 
     @Override
@@ -50,18 +50,25 @@ public class Notifications extends AppCompatActivity {
                 setQuery(FriendRequests.child(currentUser),contactsmodel.class).build();
 
         FirebaseRecyclerAdapter<contactsmodel,NotificationDesignViewHolder> viewHolderFirebaseRecyclerAdapter =
-                new FirebaseRecyclerAdapter<contactsmodel, NotificationDesignViewHolder>() {
+                new FirebaseRecyclerAdapter<contactsmodel, NotificationDesignViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull NotificationDesignViewHolder notificationDesignViewHolder, int i, @NonNull contactsmodel contactsmodel) {
+
+
 
                     }
 
                     @NonNull
                     @Override
                     public NotificationDesignViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        return null;
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item_design,parent,false);
+                        NotificationDesignViewHolder viewHolder = new NotificationDesignViewHolder(view);
+                        return viewHolder;
                     }
                 };
+
+        Notifications.setAdapter(viewHolderFirebaseRecyclerAdapter);
+        viewHolderFirebaseRecyclerAdapter.startListening();
 
     }
 
@@ -79,7 +86,5 @@ public class Notifications extends AppCompatActivity {
 
         }
     }
-
-
 
 }
