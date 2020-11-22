@@ -15,9 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +36,7 @@ public class Notifications extends AppCompatActivity {
     DatabaseReference Usersref;
     FirebaseAuth mAuth;
     String currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +79,89 @@ public class Notifications extends AppCompatActivity {
                                           public void onDataChange(@NonNull DataSnapshot snapshot) {
                                               if(snapshot.hasChild("Picture")){
                                                   String imagePath = snapshot.child("Picture").getValue().toString();
-                                                  String Name = snapshot.child("Name").getValue().toString();
-
                                                   Picasso.get().load(imagePath).into(holder.UserImage);
-                                                  holder.user_name.setText(Name);
-
-
                                               }
+
+                                              String Name = snapshot.child("Name").getValue().toString();
+                                             holder.user_name.setText(Name);
+                                             holder.Accept.setOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(View view) {
+                                                     Contactsref.child(currentUser).child(UserListId).child("contact")
+                                                             .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                         @Override
+                                                         public void onComplete(@NonNull Task<Void> task) {
+                                                             if (task.isSuccessful()){
+                                                                 Contactsref.child(currentUser).child(UserListId).child("contact")
+                                                                         .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                     @Override
+                                                                     public void onComplete(@NonNull Task<Void> task) {
+                                                                         if(task.isSuccessful()){
+                                                                             FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                 @Override
+                                                                                 public void onComplete(@NonNull Task<Void> task) {
+
+                                                                                     if(task.isSuccessful()){
+
+                                                                                         FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                             @Override
+                                                                                             public void onComplete(@NonNull Task<Void> task) {
+
+                                                                                                 if(task.isSuccessful()){
+
+
+                                                                                                 }
+
+                                                                                             }
+                                                                                         });
+                                                                                     }
+
+                                                                                 }
+                                                                             });
+
+                                                                         }
+
+                                                                     }
+                                                                 });
+                                                             }
+                                                         }
+                                                     });
+
+                                                 }
+                                             });
+
+                                             holder.Decline.setOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(View view) {
+                                                     FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                         @Override
+                                                         public void onComplete(@NonNull Task<Void> task) {
+
+                                                             if(task.isSuccessful()){
+
+                                                                 FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                     @Override
+                                                                     public void onComplete(@NonNull Task<Void> task) {
+
+                                                                         if(task.isSuccessful()){
+                                                                             Toast.makeText(Notifications.this, "Canceled", Toast.LENGTH_SHORT).show();
+                                                                         }
+
+                                                                     }
+                                                                 });
+                                                             }
+
+                                                         }
+                                                     });
+
+                                                 }
+                                             });
 
                                           }
 
                                           @Override
                                           public void onCancelled(@NonNull DatabaseError error) {
+
 
                                           }
                                       });
@@ -139,5 +214,6 @@ public class Notifications extends AppCompatActivity {
 
         }
     }
+
 
 }
