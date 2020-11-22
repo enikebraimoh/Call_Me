@@ -47,7 +47,7 @@ public class Notifications extends AppCompatActivity {
 
         FriendRequests = FirebaseDatabase.getInstance().getReference().child("Friend Requests");
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
-        Usersref = FirebaseDatabase.getInstance().getReference().child("Contacts");
+        Usersref = FirebaseDatabase.getInstance().getReference().child("Users");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser().getUid().toString();
 
@@ -67,121 +67,118 @@ public class Notifications extends AppCompatActivity {
                         String UserListId = getRef(i).getKey();
 
                         DatabaseReference RequestType = getRef(i).child("Request_type").getRef();
-                        RequestType.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       RequestType.addValueEventListener(new ValueEventListener() {
+                           @Override
+                           public void onDataChange(@NonNull DataSnapshot snapshot) {
+                               if(snapshot.exists()){
 
-                                if(snapshot.exists()){
+                                   String Type = snapshot.getValue().toString();
+                                   if(Type.equals("recieved")){
+                                       Usersref.child(UserListId).addValueEventListener(new ValueEventListener() {
+                                           @Override
+                                           public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                               if(snapshot.hasChild("Picture")){
+                                                   String imagePath = snapshot.child("Picture").getValue().toString();
+                                                   Picasso.get().load(imagePath).into(holder.UserImage);
+                                               }
 
-                                    String Type = snapshot.getValue().toString();
-                                    if(Type.equals("recieved")){
-                                      Usersref.child(UserListId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                          @Override
-                                          public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                              if(snapshot.hasChild("Picture")){
-                                                  String imagePath = snapshot.child("Picture").getValue().toString();
-                                                  Picasso.get().load(imagePath).into(holder.UserImage);
-                                              }
+                                               String Name = snapshot.child("Name").getValue().toString();
+                                               holder.user_name.setText(Name);
+                                               holder.Accept.setOnClickListener(new View.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View view) {
+                                                       Contactsref.child(currentUser).child(UserListId).child("contact")
+                                                               .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                           @Override
+                                                           public void onComplete(@NonNull Task<Void> task) {
+                                                               if (task.isSuccessful()){
+                                                                   Contactsref.child(UserListId).child(currentUser).child("contact")
+                                                                           .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                       @Override
+                                                                       public void onComplete(@NonNull Task<Void> task) {
+                                                                           if(task.isSuccessful()){
+                                                                               FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                   @Override
+                                                                                   public void onComplete(@NonNull Task<Void> task) {
 
-                                              String Name = snapshot.child("Name").getValue().toString();
-                                             holder.user_name.setText(Name);
-                                             holder.Accept.setOnClickListener(new View.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(View view) {
-                                                     Contactsref.child(currentUser).child(UserListId).child("contact")
-                                                             .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                         @Override
-                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                             if (task.isSuccessful()){
-                                                                 Contactsref.child(currentUser).child(UserListId).child("contact")
-                                                                         .setValue("saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                     @Override
-                                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                                         if(task.isSuccessful()){
-                                                                             FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                 @Override
-                                                                                 public void onComplete(@NonNull Task<Void> task) {
+                                                                                       if(task.isSuccessful()){
 
-                                                                                     if(task.isSuccessful()){
+                                                                                           FriendRequests.child(UserListId).child(currentUser).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                               @Override
+                                                                                               public void onComplete(@NonNull Task<Void> task) {
 
-                                                                                         FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                             @Override
-                                                                                             public void onComplete(@NonNull Task<Void> task) {
-
-                                                                                                 if(task.isSuccessful()){
-
-
-                                                                                                 }
-
-                                                                                             }
-                                                                                         });
-                                                                                     }
-
-                                                                                 }
-                                                                             });
-
-                                                                         }
-
-                                                                     }
-                                                                 });
-                                                             }
-                                                         }
-                                                     });
-
-                                                 }
-                                             });
-
-                                             holder.Decline.setOnClickListener(new View.OnClickListener() {
-                                                 @Override
-                                                 public void onClick(View view) {
-                                                     FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                         @Override
-                                                         public void onComplete(@NonNull Task<Void> task) {
-
-                                                             if(task.isSuccessful()){
-
-                                                                 FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                     @Override
-                                                                     public void onComplete(@NonNull Task<Void> task) {
-
-                                                                         if(task.isSuccessful()){
-                                                                             Toast.makeText(Notifications.this, "Canceled", Toast.LENGTH_SHORT).show();
-                                                                         }
-
-                                                                     }
-                                                                 });
-                                                             }
-
-                                                         }
-                                                     });
-
-                                                 }
-                                             });
-
-                                          }
-
-                                          @Override
-                                          public void onCancelled(@NonNull DatabaseError error) {
+                                                                                                   if(task.isSuccessful()){
 
 
-                                          }
-                                      });
+                                                                                                   }
+
+                                                                                               }
+                                                                                           });
+                                                                                       }
+
+                                                                                   }
+                                                                               });
+
+                                                                           }
+
+                                                                       }
+                                                                   });
+                                                               }
+                                                           }
+                                                       });
+
+                                                   }
+                                               });
+
+                                               holder.Decline.setOnClickListener(new View.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View view) {
+                                                       FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                           @Override
+                                                           public void onComplete(@NonNull Task<Void> task) {
+
+                                                               if(task.isSuccessful()){
+
+                                                                   FriendRequests.child(currentUser).child(UserListId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                       @Override
+                                                                       public void onComplete(@NonNull Task<Void> task) {
+
+                                                                           if(task.isSuccessful()){
+                                                                               Toast.makeText(Notifications.this, "Canceled", Toast.LENGTH_SHORT).show();
+                                                                           }
+
+                                                                       }
+                                                                   });
+                                                               }
+
+                                                           }
+                                                       });
+
+                                                   }
+                                               });
+
+                                           }
+
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError error) {
+
+                                           }
+                                       });
 
 
 
-                                    }else{
+                                   }else{
 
-                                    }
+                                   }
 
-                                }
+                               }
+                           }
 
-                            }
+                           @Override
+                           public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                           }
+                       });
 
                     }
 
