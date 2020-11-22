@@ -48,7 +48,8 @@ public class Notifications extends AppCompatActivity {
         FriendRequests = FirebaseDatabase.getInstance().getReference().child("Friend Requests");
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
         Usersref = FirebaseDatabase.getInstance().getReference().child("Contacts");
-        currentUser = mAuth.getCurrentUser().getUid();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser().getUid().toString();
 
     }
 
