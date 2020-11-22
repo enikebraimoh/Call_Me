@@ -14,18 +14,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class Notifications extends AppCompatActivity {
     RecyclerView Notifications;
     DatabaseReference FriendRequests;
     DatabaseReference Contactsref;
-    DatabaseReference Users;
+    DatabaseReference Usersref;
     FirebaseAuth mAuth;
     String currentUser;
 
@@ -38,7 +43,7 @@ public class Notifications extends AppCompatActivity {
 
         FriendRequests = FirebaseDatabase.getInstance().getReference().child("Friend Requests");
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
-        Users = FirebaseDatabase.getInstance().getReference().child("Contacts");
+        Usersref = FirebaseDatabase.getInstance().getReference().child("Contacts");
         currentUser = mAuth.getCurrentUser().getUid();
 
     }
@@ -52,9 +57,55 @@ public class Notifications extends AppCompatActivity {
         FirebaseRecyclerAdapter<contactsmodel,NotificationDesignViewHolder> viewHolderFirebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<contactsmodel, NotificationDesignViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull NotificationDesignViewHolder notificationDesignViewHolder, int i, @NonNull contactsmodel contactsmodel) {
+                    protected void onBindViewHolder(@NonNull NotificationDesignViewHolder holder, int i, @NonNull contactsmodel contactsmodel) {
+
+                        String UserListId = getRef(i).getKey();
+
+                        DatabaseReference RequestType = getRef(i).child("Request_type").getRef();
+                        RequestType.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                if(snapshot.exists()){
+
+                                    String Type = snapshot.getValue().toString();
+                                    if(Type.equals("recieved")){
+                                      Usersref.child(UserListId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                          @Override
+                                          public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                              if(snapshot.hasChild("Picture")){
+                                                  String imagePath = snapshot.child("Picture").getValue().toString();
+                                                  String Name = snapshot.child("Name").getValue().toString();
+
+                                                  Picasso.get().load(imagePath).into(holder.UserImage);
+                                                  holder.user_name.setText(Name);
 
 
+                                              }
+
+                                          }
+
+                                          @Override
+                                          public void onCancelled(@NonNull DatabaseError error) {
+
+                                          }
+                                      });
+
+
+
+                                    }else{
+
+                                    }
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                     }
 
@@ -73,12 +124,14 @@ public class Notifications extends AppCompatActivity {
     }
 
     static class NotificationDesignViewHolder extends RecyclerView.ViewHolder{
+        TextView user_name;
         ImageView UserImage;
         Button Accept, Decline;
         CardView mCardView;
         public NotificationDesignViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            user_name = itemView.findViewById(R.id.user_name);
             UserImage = itemView.findViewById(R.id.userimage);
             Accept = itemView.findViewById(R.id.acceptfriendrequest);
             Decline = itemView.findViewById(R.id.declinefriendrequest);
