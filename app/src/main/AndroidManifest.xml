@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CallMe">
-        <activity android:name=".ProfileAcivity"></activity>
+        <activity android:name=".CallActivity"></activity>
+        <activity android:name=".ProfileAcivity" />
         <activity android:name=".FindFriends" />
         <activity android:name=".Notifications" />
         <activity android:name=".Settings" />

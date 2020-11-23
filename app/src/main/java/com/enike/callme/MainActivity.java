@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser().getUid().toString();
+        currentUser = mAuth.getCurrentUser().getUid();
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
         Usersref = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        UserValidation();
 
         FirebaseRecyclerOptions<contactsmodel> firebaseRecyclerOptions
                 = new FirebaseRecyclerOptions.Builder<contactsmodel>()
@@ -103,6 +103,19 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                holder.Accept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(MainActivity.this,CallActivity.class);
+                        intent.putExtra("reciever_Id",UserListId);
+                        startActivity(intent);
+                        finish();
+
 
                     }
                 });
@@ -139,6 +152,28 @@ public class MainActivity extends AppCompatActivity {
             //mCardView = itemView.findViewById(R.id.cardview);
 
         }
+    }
+
+    private void UserValidation(){
+
+        DatabaseReference NewRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        NewRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.child(currentUser).exists()){
+                    Intent intent = new Intent(MainActivity.this,Settings.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+
+            }
+        });
+
     }
 
 
