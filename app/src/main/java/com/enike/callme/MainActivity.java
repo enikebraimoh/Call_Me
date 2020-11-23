@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -47,6 +48,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+
+    }
+
+    static class ContactViewHolder extends RecyclerView.ViewHolder{
+        TextView user_name;
+        ImageView UserImage;
+        Button Accept;
+        //CardView mCardView;
+        public ContactViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            user_name = itemView.findViewById(R.id.contactname);
+            UserImage = itemView.findViewById(R.id.mycontactimage);
+            Accept = itemView.findViewById(R.id.callbtn);
+            //mCardView = itemView.findViewById(R.id.cardview);
+
+        }
     }
 
 
