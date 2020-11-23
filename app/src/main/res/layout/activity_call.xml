@@ -7,6 +7,7 @@
     tools:context=".CallActivity">
 
     <ImageView
+        android:id="@+id/callimage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_image"/>
@@ -19,6 +20,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/callusername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/commissioner"
@@ -42,12 +44,14 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/callaccept"
             android:layout_margin="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@android:drawable/sym_action_call"/>
 
         <ImageView
+            android:id="@+id/calldecline"
             android:layout_margin="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
