@@ -43,6 +43,7 @@ public class ProfileAcivity extends AppCompatActivity {
 
         FriendRequests = FirebaseDatabase.getInstance().getReference().child("Friend Requests");
         Contactsref = FirebaseDatabase.getInstance().getReference().child("Contacts");
+
         Recieverimage = findViewById(R.id.recieverimage);
         sendRequestbtn = findViewById(R.id.sendfriendrequest);
         CanclefriendRequestbtn = findViewById(R.id.canclefriendrequest);
@@ -54,7 +55,6 @@ public class ProfileAcivity extends AppCompatActivity {
         RecieverId = getIntent().getExtras().get("userId").toString();
         RecieverImage = getIntent().getExtras().get("userProfileImage").toString();
         RecieverName = getIntent().getExtras().get("UserName").toString();
-
 
         Recievername.setText(RecieverName);
         Picasso.get().load(RecieverImage).placeholder(R.drawable.ic_image).into(Recieverimage);
