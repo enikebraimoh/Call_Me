@@ -127,6 +127,7 @@ public class FindFriends extends AppCompatActivity {
 
     static class Contact_ItemViewHolder extends RecyclerView.ViewHolder{
         ImageView MyContactImage;
+        TextView ContactBio;
         TextView ContactName;
         Button Call;
         CardView mCardView;
@@ -135,6 +136,7 @@ public class FindFriends extends AppCompatActivity {
             super(itemView);
             MyContactImage = itemView.findViewById(R.id.mycontactimage);
             ContactName = itemView.findViewById(R.id.contactname);
+            ContactBio = itemView.findViewById(R.id.contactbio);
             Call = itemView.findViewById(R.id.callbtn);
             mCardView = itemView.findViewById(R.id.contactcardview);
 

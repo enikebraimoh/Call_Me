@@ -23,7 +23,7 @@
             android:id="@+id/callusername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/commissioner"
+            android:fontFamily="@font/product_sans_regular"
             android:text="User Name"
             android:textAlignment="center"
             android:textSize="30dp" />
@@ -38,7 +38,6 @@
 
     <LinearLayout
         android:gravity="center_horizontal"
-       android:layout_gravity="bottom||center"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
@@ -48,14 +47,19 @@
             android:layout_margin="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@android:drawable/sym_action_call"/>
+            android:src="@drawable/ic_call"/>
+
+        <RelativeLayout
+            android:layout_margin="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/calldecline"
             android:layout_margin="10dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@android:drawable/ic_notification_clear_all"/>
+            android:src="@drawable/ic_call_silent"/>
 
         </LinearLayout>
     </LinearLayout>
