@@ -87,7 +87,7 @@
                     android:textColor="#030060"
                     android:textSize="20sp"
                     android:hint="Name"
-                    android:maxLength="15"
+                    android:maxLength="30"
                     android:layout_width="match_parent"
                     android:background="@drawable/edittextbg"
                     android:layout_height="wrap_content"/>
@@ -123,7 +123,7 @@
                     android:textColor="#030060"
                     android:textSize="20sp"
                     android:hint="Bio"
-                    android:maxLength="30"
+                    android:maxLength="75"
                     android:layout_width="match_parent"
                     android:background="@drawable/edittextbg"
                     android:layout_height="wrap_content"/>

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -43,6 +44,8 @@ public class Settings extends AppCompatActivity {
     private String DownloadUrl;
     DatabaseReference Usersref;
 
+    ProgressDialog bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,10 @@ public class Settings extends AppCompatActivity {
         SaveBtn = findViewById(R.id.savebutton);
         Logout = findViewById(R.id.logoutbtn);
         ProfilePix = findViewById(R.id.profileimage);
+
+        bar = new ProgressDialog(Settings.this);
+
+
 
         userprofileref = FirebaseStorage.getInstance().getReference().child("User Profile Images");
         Usersref = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -81,8 +88,14 @@ public class Settings extends AppCompatActivity {
         });
 
         SaveBtn.setOnClickListener(view -> {
+            bar.setMessage("Saving Info Please wait..");
+            bar.setTitle("Please wait");
+            bar.setCanceledOnTouchOutside(false);
+            bar.show();
+
             if(Name.getText().toString().equals("") || Bio.getText().toString().equals("")){
                 Toast.makeText(this, "please all fields are mandatory", Toast.LENGTH_SHORT).show();
+                bar.dismiss();
             }else if(ImageUri == null){
 
                 Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -91,11 +104,12 @@ public class Settings extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                        if(snapshot.hasChild("Picture")){
                            HashMap<String,Object> Profile = new HashMap<>();
-                           Profile.put("Name",Name.getText().toString());
+                           Profile.put("Name",Name.getText().toString().toLowerCase());
                            Profile.put("bio",Bio.getText().toString());
 
                            DatabaseReference usersref = Usersref.child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                            usersref.updateChildren(Profile).addOnCompleteListener(task1 -> {
+                               bar.dismiss();
                                Intent intent = new Intent(Settings.this,MainActivity.class);
                                startActivity(intent);
                                finish();

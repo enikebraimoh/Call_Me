@@ -88,8 +88,9 @@ public class FindFriends extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull Contact_ItemViewHolder holder, int i, @NonNull contactsmodel contactsmodel) {
 
-                holder.ContactName.setText(contactsmodel.getName().toLowerCase());
+                holder.ContactName.setText("@"+contactsmodel.getName().toLowerCase());
                 Picasso.get().load(contactsmodel.getPicture()).into(holder.MyContactImage);
+                holder.ContactBio.setText(contactsmodel.getBio());
                 holder.Call.setVisibility(View.GONE);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {

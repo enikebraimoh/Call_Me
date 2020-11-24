@@ -90,11 +90,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-
                          String Image = snapshot.child("Picture").getValue().toString();
                          String Name = snapshot.child("Name").getValue().toString();
+                         String Bio =  snapshot.child("bio").getValue().toString();
 
                             Picasso.get().load(Image).into(holder.UserImage);
+                            holder.ContactBio.setText(Bio);
                             holder.user_name.setText(Name);
 
                         }
@@ -142,10 +143,12 @@ public class MainActivity extends AppCompatActivity {
         TextView user_name;
         ImageView UserImage;
         Button Accept;
+        TextView ContactBio;
         //CardView mCardView;
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            ContactBio = itemView.findViewById(R.id.contactbio);
             user_name = itemView.findViewById(R.id.contactname);
             UserImage = itemView.findViewById(R.id.mycontactimage);
             Accept = itemView.findViewById(R.id.callbtn);
