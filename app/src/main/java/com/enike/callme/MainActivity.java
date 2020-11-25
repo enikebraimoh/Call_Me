@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         UserValidation();
+        ListenForCalls();
 
         FirebaseRecyclerOptions<contactsmodel> firebaseRecyclerOptions
                 = new FirebaseRecyclerOptions.Builder<contactsmodel>()
@@ -136,6 +137,31 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
+
+    }
+
+    private void ListenForCalls() {
+
+        Usersref.child(currentUser).child("Ringing").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("ringing")){
+
+                    String user = snapshot.child("ringing").getValue().toString();
+
+                    Intent intent = new Intent(MainActivity.this,CallActivity.class);
+                    intent.putExtra("reciever_Id",user);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
 
