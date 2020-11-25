@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -85,10 +86,11 @@ public class FindFriends extends AppCompatActivity {
         }
 
         FirebaseRecyclerAdapter<contactsmodel,Contact_ItemViewHolder> contactsView = new FirebaseRecyclerAdapter<contactsmodel, Contact_ItemViewHolder>(options) {
+            @SuppressLint("SetTextI18n")
             @Override
             protected void onBindViewHolder(@NonNull Contact_ItemViewHolder holder, int i, @NonNull contactsmodel contactsmodel) {
 
-                holder.ContactName.setText("@"+contactsmodel.getName().toLowerCase());
+                holder.ContactName.setText("@"+contactsmodel.getName());
                 Picasso.get().load(contactsmodel.getPicture()).into(holder.MyContactImage);
                 holder.ContactBio.setText(contactsmodel.getBio());
                 holder.Call.setVisibility(View.GONE);

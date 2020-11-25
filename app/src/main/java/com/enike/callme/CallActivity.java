@@ -3,7 +3,10 @@ package com.enike.callme;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.telecom.Call;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +27,7 @@ public class CallActivity extends AppCompatActivity {
     DatabaseReference UsersRef;
     String RecieverId,Username, Userimage;
     TextView name;
-    ImageView mImageView;
+    ImageView mImageView, AcceptCall, CancelCall;
     FirebaseAuth mAuth;
     String SenderId;
 
@@ -42,6 +45,9 @@ public class CallActivity extends AppCompatActivity {
 
         name = findViewById(R.id.callusername);
         mImageView = findViewById(R.id.callimage);
+
+        AcceptCall = findViewById(R.id.callaccept);
+        CancelCall = findViewById(R.id.calldecline);
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -62,13 +68,38 @@ public class CallActivity extends AppCompatActivity {
             }
         });
 
+        CancelCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CancelCalling();
+
+            }
+        });
+
     }
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
         makeCall();
+
+        UsersRef.child(SenderId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("Ringing")){
+                    AcceptCall.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
 
@@ -118,6 +149,81 @@ public class CallActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void CancelCalling() {
+        // Sender Part
+        UsersRef.child(SenderId).child("Calling").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.hasChild("calling")){
+                    String CallerId = snapshot.child("calling").getValue().toString();
+                    UsersRef.child(CallerId).child("Ringing").removeValue()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                  if(task.isSuccessful()){
+                                      UsersRef.child(SenderId).child("Calling").removeValue()
+                                              .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                  @Override
+                                                  public void onComplete(@NonNull Task<Void> task) {
+                                                      Intent intent = new Intent(CallActivity.this,MainActivity.class);
+                                                      finish();
+                                                      startActivity(intent);
+
+                                                  }
+                                              });
+                                  }
+                                }
+                            });
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // reciever part
+
+        UsersRef.child(SenderId).child("Ringing").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists() && snapshot.hasChild("ringing")){
+                    String RingingId = snapshot.getValue().toString();
+                    UsersRef.child(RingingId).child("Calling").removeValue()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        UsersRef.child(SenderId).child("Ringing").removeValue()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Intent intent = new Intent(CallActivity.this,Registration2.class);
+                                                        finish();
+                                                        startActivity(intent);
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
