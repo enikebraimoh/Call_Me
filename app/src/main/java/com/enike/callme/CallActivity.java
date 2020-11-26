@@ -169,8 +169,8 @@ public class CallActivity extends AppCompatActivity {
                                                   @Override
                                                   public void onComplete(@NonNull Task<Void> task) {
                                                       Intent intent = new Intent(CallActivity.this,MainActivity.class);
-                                                      finish();
                                                       startActivity(intent);
+                                                      finish();
 
                                                   }
                                               });
@@ -205,15 +205,14 @@ public class CallActivity extends AppCompatActivity {
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        Intent intent = new Intent(CallActivity.this,Registration2.class);
-                                                        finish();
+                                                        Intent intent = new Intent(CallActivity.this,MainActivity.class);
                                                         startActivity(intent);
+                                                        finish();
                                                     }
                                                 });
                                     }
                                 }
                             });
-
 
                 }
 

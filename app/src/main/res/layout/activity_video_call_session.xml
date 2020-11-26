@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VideoCallSession">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<FrameLayout
+    android:background="@color/teal_200"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/subscriber_frame">
+
+    <FrameLayout
+        android:id="@+id/publisher_frame"
+        android:background="@color/white"
+        android:layout_width="90dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="15dp"
+        android:layout_height="120dp">
+
+    </FrameLayout>
+
+
+</FrameLayout>
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/endvideosession"
+        android:layout_margin="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_call_silent"/>
+
+</RelativeLayout>

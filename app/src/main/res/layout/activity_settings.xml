@@ -47,8 +47,8 @@
             android:layout_marginTop="20dp"
             app:cardElevation="5dp"
             app:cardCornerRadius="200dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="220dp"
+            android:layout_height="220dp">
 
             <ImageView
                 android:scaleType="centerCrop"
