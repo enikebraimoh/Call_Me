@@ -38,7 +38,7 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
     private static final String SESSION_ID = "2_MX40NzAwNDg0NH5-MTYwNjM2MDYzNjg3MH5BV1NzU0E2dktpL1k2eER0bVpnRlBYZTh-fg";
 
     private static final int REQUEST_CODE = 1234;
-    private static final String LOG_NAME = VideoCallSession.class.getSimpleName();
+    private static final String LOG_NAME = "naname";
     ImageView CLose_Session;
     FrameLayout Publisher_Layout, Subscriber_Layout;
     DatabaseReference UserRef;
@@ -57,8 +57,7 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
         CurrentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         CLose_Session = findViewById(R.id.endvideosession);
-        Publisher_Layout = findViewById(R.id.publisher_frame);
-        Subscriber_Layout = findViewById(R.id.subscriber_frame);
+
 
         CLose_Session.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +124,15 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
         String [] params = {Manifest.permission.INTERNET,Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
 
         if(EasyPermissions.hasPermissions(VideoCallSession.this,params)){
+
+            Publisher_Layout = findViewById(R.id.publisher_frame);
+            Subscriber_Layout = findViewById(R.id.subscriber_frame);
+
             mSession = new com.opentok.android.Session.Builder(VideoCallSession.this,API_KEY,SESSION_ID).build();
             mSession.setSessionListener(VideoCallSession.this);
             mSession.connect(TOKEN);
+        }else{
+            EasyPermissions.requestPermissions(this,"please this app needs permission",REQUEST_CODE,params);
         }
 
     }
@@ -137,14 +142,14 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
         Log.i(LOG_NAME,"on Stream Connected");
         // publishing our stream to the session
         mPublisher = new Publisher.Builder(this).build();
-        mPublisher.setPublisherListener(this);
+        mPublisher.setPublisherListener(VideoCallSession.this);
 
         Publisher_Layout.addView(mPublisher.getView());
 
         if(mPublisher.getView() instanceof GLSurfaceView){
             ((GLSurfaceView)  mPublisher.getView()).setZOrderOnTop(true);
         }
-        session.publish(mPublisher);
+        mSession.publish(mPublisher);
 
     }
 
@@ -158,11 +163,12 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
     public void onStreamReceived(Session session, Stream stream) {
         Log.i(LOG_NAME,"on Stream Received");
 
-        mSubscriber = new Subscriber.Builder(this,stream).build();
+
         if(mSubscriber == null){
+            mSubscriber = new Subscriber.Builder(this,stream).build();
+            mSession.subscribe(mSubscriber);
             Subscriber_Layout.addView(mSubscriber.getView());
 
-            session.subscribe(mSubscriber);
         }
 
 

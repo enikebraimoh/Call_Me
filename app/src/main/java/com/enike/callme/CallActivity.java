@@ -55,11 +55,11 @@ public class CallActivity extends AppCompatActivity {
         AcceptCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mMediaPlayer.stop();
                 HashMap<String,Object> pickedObject = new HashMap<>();
                 pickedObject.put("picked","picked");
 
-                UsersRef.child(RecieverId).child("Ringing").updateChildren(pickedObject).
+                UsersRef.child(SenderId).child("Ringing").updateChildren(pickedObject).
                         addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
