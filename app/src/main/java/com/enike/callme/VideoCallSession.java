@@ -65,30 +65,42 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
                 UserRef.child(CurrentUser).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.hasChild("Ringing")){
+                        if(snapshot.hasChild("Ringing")||snapshot.hasChild("Calling")){
                             UserRef.child(CurrentUser).child("Ringing").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    mPublisher.destroy();
-                                    mSubscriber.destroy();
-                                    Intent intent = new Intent(VideoCallSession.this,MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+
+                                    if(snapshot.hasChild("Calling")){
+                                        UserRef.child(CurrentUser).child("Calling").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                mPublisher.destroy();
+                                                mSubscriber.destroy();
+                                                Intent intent = new Intent(VideoCallSession.this,MainActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        });
+                                    }
+//                                    mPublisher.destroy();
+//                                    mSubscriber.destroy();
+//                                    Intent intent = new Intent(VideoCallSession.this,MainActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
                                 }
                             });
                         }
-                        if(snapshot.hasChild("Calling")){
-                            UserRef.child(CurrentUser).child("Calling").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    mPublisher.destroy();
-                                    mSubscriber.destroy();
-                                    Intent intent = new Intent(VideoCallSession.this,MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                        }
+//                        if(snapshot.hasChild("Calling")){
+//                            UserRef.child(CurrentUser).child("Calling").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    mPublisher.destroy();
+//                                    mSubscriber.destroy();
+//                                    Intent intent = new Intent(VideoCallSession.this,MainActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
+//                                }
+//                            });
                         else{
                             mPublisher.destroy();
                             mSubscriber.destroy();

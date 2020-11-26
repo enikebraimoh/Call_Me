@@ -137,13 +137,12 @@ public class CallActivity extends AppCompatActivity {
 
 
     private void makeCall() {
-        mMediaPlayer.start();
+
         UsersRef.child(RecieverId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.hasChild("Ringing") && !snapshot.hasChild("Calling")){
-
-
+                    mMediaPlayer.start();
                     HashMap<String,Object> CallingObject = new HashMap<>();
                     CallingObject.put("calling",RecieverId);
 
@@ -194,6 +193,7 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("calling")){
+                    mMediaPlayer.stop();
                     String CallerId = snapshot.child("calling").getValue().toString();
                     UsersRef.child(CallerId).child("Ringing").removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -204,6 +204,7 @@ public class CallActivity extends AppCompatActivity {
                                               .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                   @Override
                                                   public void onComplete(@NonNull Task<Void> task) {
+                                                      mMediaPlayer.stop();
                                                       Intent intent = new Intent(CallActivity.this,MainActivity.class);
                                                       startActivity(intent);
                                                       finish();
