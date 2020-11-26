@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.telecom.Call;
 import android.view.View;
@@ -30,12 +31,14 @@ public class CallActivity extends AppCompatActivity {
     ImageView mImageView, AcceptCall, CancelCall;
     FirebaseAuth mAuth;
     String SenderId;
+    MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
 
+        mMediaPlayer = MediaPlayer.create(this,R.raw.ringtone);
 
         RecieverId = getIntent().getExtras().get("reciever_Id").toString();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -48,6 +51,28 @@ public class CallActivity extends AppCompatActivity {
 
         AcceptCall = findViewById(R.id.callaccept);
         CancelCall = findViewById(R.id.calldecline);
+
+        AcceptCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                HashMap<String,Object> pickedObject = new HashMap<>();
+                pickedObject.put("picked","picked");
+
+                UsersRef.child(RecieverId).child("Ringing").updateChildren(pickedObject).
+                        addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                mMediaPlayer.stop();
+                                Intent intent = new Intent(CallActivity.this,VideoCallSession.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+
+            }
+        });
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,6 +96,7 @@ public class CallActivity extends AppCompatActivity {
         CancelCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mMediaPlayer.stop();
                 CancelCalling();
 
             }
@@ -86,11 +112,17 @@ public class CallActivity extends AppCompatActivity {
 
         makeCall();
 
-        UsersRef.child(SenderId).addValueEventListener(new ValueEventListener() {
+        UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild("Ringing")){
+                if(snapshot.child(SenderId).hasChild("Ringing")){
                     AcceptCall.setVisibility(View.VISIBLE);
+                }
+                if (snapshot.child(RecieverId).child("Ringing").hasChild("picked")){
+                    mMediaPlayer.stop();
+                    Intent intent = new Intent(CallActivity.this,VideoCallSession.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
 
@@ -103,15 +135,18 @@ public class CallActivity extends AppCompatActivity {
 
     }
 
-    private void makeCall() {
 
+    private void makeCall() {
+        mMediaPlayer.start();
         UsersRef.child(RecieverId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.hasChild("Ringing") && !snapshot.hasChild("Calling")){
 
+
                     HashMap<String,Object> CallingObject = new HashMap<>();
                     CallingObject.put("calling",RecieverId);
+
 
                     UsersRef.child(SenderId).child("Calling").updateChildren(CallingObject)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -154,6 +189,7 @@ public class CallActivity extends AppCompatActivity {
 
     private void CancelCalling() {
         // Sender Part
+        mMediaPlayer.stop();
         UsersRef.child(SenderId).child("Calling").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

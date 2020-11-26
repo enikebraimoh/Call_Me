@@ -42,7 +42,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
 
-    implementation 'com.opentok.android:opentok-android-sdk2.18.1'
+    implementation 'com.opentok.android:opentok-android-sdk:2.15.3'
     implementation 'pub.devrel:easypermissions:3.0.0'
 
 
