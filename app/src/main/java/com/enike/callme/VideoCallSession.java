@@ -77,7 +77,7 @@ public class VideoCallSession extends AppCompatActivity implements Session.Sessi
                                 }
                             });
                         }
-                        if(snapshot.hasChild("Calling")){
+                       else if(snapshot.hasChild("Calling")){
                             UserRef.child(CurrentUser).child("Calling").removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
