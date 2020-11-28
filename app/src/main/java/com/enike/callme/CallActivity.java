@@ -116,6 +116,7 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(SenderId).hasChild("Ringing")){
+                    mMediaPlayer.start();
                     AcceptCall.setVisibility(View.VISIBLE);
                 }
                 if (snapshot.child(RecieverId).child("Ringing").hasChild("picked")){
@@ -142,7 +143,6 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.hasChild("Ringing") && !snapshot.hasChild("Calling")){
-                    mMediaPlayer.start();
                     HashMap<String,Object> CallingObject = new HashMap<>();
                     CallingObject.put("calling",RecieverId);
 
@@ -217,6 +217,12 @@ public class CallActivity extends AppCompatActivity {
 
 
                 }
+                else{
+                    mMediaPlayer.stop();
+                    Intent intent = new Intent(CallActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
 
             }
 
@@ -232,6 +238,7 @@ public class CallActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChild("ringing")){
+                    mMediaPlayer.stop();
                     String RingingId = snapshot.getValue().toString();
                     UsersRef.child(RingingId).child("Calling").removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -242,6 +249,7 @@ public class CallActivity extends AppCompatActivity {
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
+                                                        mMediaPlayer.stop();
                                                         Intent intent = new Intent(CallActivity.this,MainActivity.class);
                                                         startActivity(intent);
                                                         finish();
@@ -250,6 +258,12 @@ public class CallActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+
+                }
+                else{
+                    Intent intent = new Intent(CallActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    finish();
 
                 }
 
