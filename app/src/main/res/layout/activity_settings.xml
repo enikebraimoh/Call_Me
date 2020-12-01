@@ -35,9 +35,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="25sp"
                         android:text="Settings"
-                        android:textStyle="bold"
                         android:textColor="@color/white"
-                        android:fontFamily="@font/commissioner"/>
+                        android:fontFamily="@font/product_sans_regular"/>
                 </LinearLayout>
 
             </androidx.appcompat.widget.Toolbar>
@@ -104,7 +103,6 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:gravity="center"
                 android:padding="15dp"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"

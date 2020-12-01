@@ -27,7 +27,7 @@
                     android:textSize="25sp"
                     android:text="Notifications"
                     android:textColor="@color/white"
-                    android:fontFamily="@font/commissioner"/>
+                    android:fontFamily="@font/product_sans_regular"/>
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>

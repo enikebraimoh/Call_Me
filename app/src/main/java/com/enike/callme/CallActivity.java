@@ -69,8 +69,6 @@ public class CallActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-
-
             }
         });
 
@@ -231,6 +229,7 @@ public class CallActivity extends AppCompatActivity {
 
             }
         });
+
 
         // reciever part
 

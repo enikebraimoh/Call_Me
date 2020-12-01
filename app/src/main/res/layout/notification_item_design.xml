@@ -18,11 +18,21 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/userimage"
+
+            <androidx.cardview.widget.CardView
+                app:cardElevation="2dp"
+                app:cardCornerRadius="10dp"
                 android:layout_width="150dp"
-                android:src="@drawable/ic_image"
-                android:layout_height="150dp"/>
+                android:layout_height="150dp">
+
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/userimage"
+                    android:layout_width="150dp"
+                    android:src="@drawable/ic_image"
+                    android:layout_height="150dp"/>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/user_name"
