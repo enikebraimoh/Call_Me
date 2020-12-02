@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseReference NewRef = FirebaseDatabase.getInstance().getReference().child("Users");
         NewRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.child(currentUser).exists()){
