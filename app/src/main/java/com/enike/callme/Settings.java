@@ -43,7 +43,6 @@ public class Settings extends AppCompatActivity {
     StorageReference userprofileref;
     private String DownloadUrl;
     DatabaseReference Usersref;
-
     ProgressDialog bar;
 
     @Override
